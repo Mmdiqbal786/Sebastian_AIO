@@ -3,6 +3,7 @@
 import React from "react";
 import Layout from "@/app/components/Dashboard/LayoutAuth";
 import DynamicForm, { FieldConfig } from "@/app/lib/utils/DynamicForm";
+import { DashboardPath } from "../lib/path";
 
 const loginFields: FieldConfig[] = [
   {
@@ -36,7 +37,7 @@ export default function LoginPage() {
           fields={loginFields}
           apiEndpoint="/api/auth/login"
           mode="login"
-          redirectTo="/employee"
+          redirectTo={DashboardPath}
         />
       </main>
     </Layout>
