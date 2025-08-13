@@ -1,0 +1,40 @@
+{
+  "employees": {
+    "fields": {
+      "name": { "type": "string", "required": true },
+      "email": { "type": "string", "required": true },
+      "password": { "type": "password", "hash": true, "required": true },
+      "profileImg": { "type": "file", "uploadPath": "profileImg", "required": true },
+      "document": { "type": "file", "uploadPath": "document", "required": true },
+      "phone": { "type": "string" },
+      "dob": { "type": "date" },
+      "address": { "type": "string" },
+      "type": { "type": "string" }
+    }
+  },
+  "users": {
+    "fields": {
+      "name": { "type": "string", "required": true },
+      "email": { "type": "string", "required": true },
+      "password": { "type": "password", "hash": true, "required": true }
+    }
+  },
+  "roles": {
+    "fields": {
+      "name": { "type": "string", "required": true }
+    }
+  },
+  "foods": {
+    "fields": {
+      "name": { "type": "string", "required": true },
+      "price": { "type": "number", "required": true },
+      "stock": { "type": "number", "required": true }
+    }
+  },
+  "categories": {
+    "fields": {
+      "name": { "type": "string", "required": true },
+      "foods": { "type": "array" }
+    }
+  }
+}
