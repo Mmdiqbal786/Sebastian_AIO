@@ -3,6 +3,7 @@
 import React from "react";
 import Layout from "@/app/components/Dashboard/LayoutAuth";
 import DynamicForm, { FieldConfig } from "@/app/lib/utils/DynamicForm";
+import Header from "../components/Dashboard/HeaderAuth";
 
 const registrationFields: FieldConfig[] = [
   { name: "name", label: "Name", type: "text", placeholder: "Enter your name" },
@@ -52,6 +53,7 @@ const registrationFields: FieldConfig[] = [
 export default function RegisterPage() {
   return (
     <Layout>
+      <Header />
       <main className="bg-gray-200 flex justify-center items-center px-4 sm:px-6 lg:px-8 py-24">
         <DynamicForm
           title="Register"

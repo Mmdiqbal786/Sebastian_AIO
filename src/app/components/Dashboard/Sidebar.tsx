@@ -1,22 +1,82 @@
 "use client";
 
 import { FaUserTie, FaUserGroup } from "react-icons/fa6";
-import { FaUsers } from "react-icons/fa";
-import { BiSolidCategoryAlt } from "react-icons/bi";
-import { IoSettings, IoFastFood } from "react-icons/io5";
-import { MdOutlineFoodBank } from "react-icons/md";
-import { GrPlan } from "react-icons/gr";
-import { FaBusinessTime } from "react-icons/fa";
+// import { FaUsers } from "react-icons/fa";
+// import { BiSolidCategoryAlt } from "react-icons/bi";
+// import { IoSettings, IoFastFood } from "react-icons/io5";
+import { IoSettings } from "react-icons/io5";
+// import { MdOutlineFoodBank } from "react-icons/md";
+// import { GrPlan } from "react-icons/gr";
+// import { FaBusinessTime } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useLogout } from "@/app/hooks/useLogout";
 
 
+// const navigationItems = [
+//   {
+//     section: "Dashboard",
+//     links: [
+//       {
+//         path: "employee",
+//         label: "Employee",
+//         icon: <FaUserGroup />,
+//       },
+//       {
+//         path: "role",
+//         label: "Role",
+//         icon: <FaUserTie />,
+//       },
+//       {
+//         path: "slot",
+//         label: "Slot",
+//         icon: <FaBusinessTime />,
+//       },
+//       {
+//         path: "user",
+//         label: "User",
+//         icon: <FaUsers />,
+//       },
+//       {
+//         path: "food",
+//         label: "Food",
+//         icon: <IoFastFood />,
+//       },
+//       {
+//         path: "plan",
+//         label: "Plan",
+//         icon: <GrPlan />,
+//       },
+//       {
+//         path: "foodCategory",
+//         label: "Food Category",
+//         icon: <MdOutlineFoodBank />,
+//       },
+//       {
+//         path: "category",
+//         label: "Category",
+//         icon: <BiSolidCategoryAlt />,
+//       },
+//       {
+//         path: "setting",
+//         label: "Setting",
+//         icon: <IoSettings />,
+//       },
+//     ],
+//   },
+// ];
+
 const navigationItems = [
   {
-    section: "Dashboard",
+    section: "dashboard",
     links: [
+      {
+        path: "dashboard",
+        label: "Dashboard",
+        icon: <MdDashboard />,
+      },
       {
         path: "employee",
         label: "Employee",
@@ -26,36 +86,6 @@ const navigationItems = [
         path: "role",
         label: "Role",
         icon: <FaUserTie />,
-      },
-      {
-        path: "slot",
-        label: "Slot",
-        icon: <FaBusinessTime />,
-      },
-      {
-        path: "user",
-        label: "User",
-        icon: <FaUsers />,
-      },
-      {
-        path: "food",
-        label: "Food",
-        icon: <IoFastFood />,
-      },
-      {
-        path: "plan",
-        label: "Plan",
-        icon: <GrPlan />,
-      },
-      {
-        path: "foodCategory",
-        label: "Food Category",
-        icon: <MdOutlineFoodBank />,
-      },
-      {
-        path: "category",
-        label: "Category",
-        icon: <BiSolidCategoryAlt />,
       },
       {
         path: "setting",
