@@ -54,7 +54,9 @@ const db = async () => {
   if (!mongoClient) {
     await connectToMongoClient();
   }
-  if (!mongoClient) throw new Error("❌ MongoClient is not connected yet.");
+  if (!mongoClient) {
+    throw new Error("❌ MongoClient is not connected yet.");
+  }
   const dbName = process.env.NEXT_MONGO_DB;
   return mongoClient.db(dbName);
 };
@@ -67,7 +69,9 @@ const models = mongoose.models as Record<string, mongoose.Model<any>>;
 async function checkRelations(entity: EntityType, id: string): Promise<string[]> {
   const messages: string[] = [];
   const relations = relationMap[entity];
-  if (!relations) return messages;
+  if (!relations) {
+    return messages;
+  }
   for (const relation of relations) {
     const relatedCollection = database.collection(relation.collection);
     let convertedId: any = id;
