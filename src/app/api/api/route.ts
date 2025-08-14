@@ -1,517 +1,3 @@
-// /* eslint-disable @typescript-eslint/no-unused-vars */
-// /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { promises as fs } from 'fs';
-// import path from 'path';
-// import { NextRequest } from "next/server";
-// import { ObjectId } from "mongodb";
-// import { 
-//   convertFieldsToNumber,
-//   findOrCreateRole, 
-//   generateEmployeeId,
-//   getUserIdByEmail,
-//   processSubTableField, 
-// } from "@/app/lib/serverUtils";
-// import { hashPassword, processPassword, verifyPassword } from "@/app/lib/passwordUtils";
-// import { checkRelations, client, database, db } from "@/app/lib/prisma";
-// import { EntityType, entityTypes, PostRequestParams } from "@/app/types/EntityType";
-// import { deleteFile, handleFileUpdate, saveBase64File } from "@/app/lib/serverFileUtils";
-// import { formatDateWithTimezone, processDate } from '@/app/lib/dateFormat';
-
-// // Common function to return response
-// const jsonResponse = (data: any, status: number = 200) => 
-//   new Response(JSON.stringify(data), { status, headers: { "Content-Type": "application/json" } });
-
-// /**
-//  * Handles creating a new entity in the database.
-//  */
-// async function handlePostRequest({ req, entityType }: PostRequestParams) {
-//   try {
-//     await client.connect();
-//     const formData = await req.formData();
-//     const collection = database.collection(entityType);
-//     const timestamp = new Date(); 
-//     const entityConfig: Record<EntityType, { fields: string[]; process: (data: any) => Promise<any> }> = {
-//       employees: {
-//         fields: ["name", "email", "password", "profileImg", "document", "phone", "dob", "address", "type"],
-//         process: async (data) => {
-//           const role = await findOrCreateRole(data.role || "employee");
-//           return {
-//             ...data,
-//             dob: formatDateWithTimezone(data.dob),
-//             profileImg: await saveBase64File(data.profileImg, "profileImg", data.email),
-//             document: await saveBase64File(data.document, "document", data.email),
-//             employeeId: await generateEmployeeId(),
-//             password: await hashPassword(data.password),
-//             roleId: role._id,
-//             createdAt: timestamp,
-//             updatedAt: timestamp,
-//           };
-//         },
-//       },
-//       roles: {
-//         fields: ["name"],
-//         process: async (data) => ({
-//           ...data,
-//           createdAt: timestamp,
-//           updatedAt: timestamp,
-//         }),
-//       },
-//       users: {
-//         fields: ["name", "email", "password"],
-//         process: async (data) => {
-//           const role = await findOrCreateRole(data.role || "user");
-//           return {
-//             ...data,
-//             password: await hashPassword(data.password),
-//             roleId: role._id,
-//             createdAt: timestamp,
-//             updatedAt: timestamp,
-//           };
-//         },
-//       },
-//       foods: {
-//         // fields: ["name", "price", "stock", "foodCategories", "categoryId", "image"],
-//         fields: ["name", "categoryId", "image"],
-//         process: async (data) => ({
-//           ...data,
-//           image: await saveBase64File(data.image, "image", data.name),
-//           createdAt: timestamp,
-//           updatedAt: timestamp,
-//         }),
-//       },
-//       categories: {
-//         fields: ["name", "plans"],
-//         process: async (data) => ({
-//           ...data,
-//           createdAt: timestamp,
-//           updatedAt: timestamp,
-//         }),
-//       },
-//       foodCategories: {
-//         fields: ["name"],
-//         process: async (data) => ({
-//           ...data,
-//           createdAt: timestamp,
-//           updatedAt: timestamp,
-//         }),
-//       },
-//       plans: {
-//         fields: [
-//           "name", 
-//           "price", 
-//           "foodSelections"
-//         ],
-//         process: async (data) => {
-//           data = convertFieldsToNumber(data, ["price"]);
-//           data = processSubTableField(data, "foodSelections", "totalFoodSelections");
-
-//           return {
-//             ...data,
-//             createdAt: timestamp,
-//             updatedAt: timestamp,
-//           };
-//         },
-//       }
-//     };
-
-//     const { fields, process } = entityConfig[entityType] || { fields: [], process: async (data) => data };
-//     const missingFields = fields.filter((field) => !formData.get(field));
-//     if (missingFields.length) return jsonResponse({ error: `Missing fields: ${missingFields.join(", ")}` }, 400);
-
-//     const data = Object.fromEntries(fields.map((field) => [field, formData.get(field)]));
-//     const processedData = await process(data);
-
-//     const result = await collection.insertOne(processedData);
-
-//     return result.insertedId
-//       ? jsonResponse({ message: `${entityType} saved successfully!`, id: result.insertedId, data: processedData }, 201)
-//       : jsonResponse({ error: `Failed to save ${entityType}.` }, 500);
-//   } catch (error) {
-//     return jsonResponse({ error: `Error saving ${entityType}.` }, 500);
-//   } finally {
-//     await client.close();
-//   }
-// }
-
-// /**
-//  * Handles POST request
-//  */
-// export async function POST(req: NextRequest) {
-//   try {
-//     const entityTypeParam = req.nextUrl.searchParams.get("type");
-//     const entityType = entityTypes.includes(entityTypeParam as EntityType)
-//       ? (entityTypeParam as EntityType)
-//       : null;
-
-//     if (!entityType) {
-//       return jsonResponse({ error: "Invalid or missing entity type" }, 400);
-//     }
-//     return await handlePostRequest({ req, entityType });
-//   } catch (error) {
-//     console.error("Error handling POST request:", error);
-//     return jsonResponse({ error: "Failed to process the request." }, 500);
-//   }
-// }
-
-// /**
-//  * Fetch data from MongoDB
-//  */
-// async function fetchFromMongo(entity: string, id?: string) {
-//   try {
-//     const collection = database.collection(entity);
-
-//     if (id) {
-//       return await collection.findOne({ _id: new ObjectId(id) });
-//     } else {
-//       return await collection.find({}).toArray();
-//     }
-//   } catch (error) {
-//     console.error(`Error fetching from MongoDB: ${error}`);
-//     throw new Error(`Error fetching ${entity} from MongoDB.`);
-//   }
-// }
-
-// /**
-//  * Handles GET request
-//  */
-// export async function GET(req: NextRequest) {
-//   const id = req.nextUrl.searchParams.get("id") ?? undefined;
-//   const type = req.nextUrl.searchParams.get("type");
-
-//   if (!type) return jsonResponse({ error: "Missing entity type" }, 400);
-
-//   try {
-//     const data = await fetchFromMongo(type, id);
-//     return data ? jsonResponse({ [type]: data }) : jsonResponse({ error: `${type} not found.` }, 404);
-//   } catch (error) {
-//     return jsonResponse({ error: error instanceof Error ? error.message : "An unknown error occurred" }, 500);
-//   }
-// }
-
-// /**
-//  * Checks if a value looks like a file path.
-//  */
-// function isFilePath(value: string) {
-//   const fileExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.pdf', '.docx', '.txt', '.ico', '.webp'];
-//   return fileExtensions.some(ext => value.toLowerCase().endsWith(ext));
-// }
-
-// /**
-//  * Handles entity deletion
-//  */
-// class DeletionBlockedError extends Error {
-//   constructor(message: string) {
-//     super(message);
-//     this.name = "DeletionBlockedError";
-//   }
-// }
-
-// async function deleteFromMongo(entity: EntityType, id: string) {
-//   try {
-//     await client.connect();
-//     const collection = database.collection(entity);
-//     const record = await collection.findOne({ _id: new ObjectId(id) });
-//     if (!record) throw new Error(`${entity} not found.`);
-
-//     const relationMessages = await checkRelations(entity, id);
-//     if (relationMessages.length > 0) {
-//       // Throw a custom error with the combined relation messages.
-//       throw new DeletionBlockedError(relationMessages.join(" "));
-//     }
-
-//     // Delete any associated files.
-//     for (const [key, value] of Object.entries(record)) {
-//       if (typeof value === "string" && isFilePath(value)) {
-//         const filePath = path.join(process.cwd(), "public", value);
-//         try {
-//           await fs.access(filePath);
-//           await fs.unlink(filePath);
-//         } catch (fileError) {
-//           console.error(`Error accessing or deleting file at ${filePath}:`, fileError);
-//         }
-//       }
-//     }
-
-//     const result = await collection.deleteOne({ _id: new ObjectId(id) });
-//     if (result.deletedCount === 0) throw new Error(`Failed to delete ${entity}.`);
-//     return record;
-//   } catch (error: any) {
-//     console.error(`Error deleting ${entity}:`, error);
-//     // Rethrow the error to be handled in the route.
-//     throw error;
-//   } finally {
-//     await client.close();
-//   }
-// }
-
-// /**
-//  * Handles DELETE request
-//  */
-// export async function DELETE(req: NextRequest) {
-//   const id = req.nextUrl.searchParams.get("id");
-//   const type = req.nextUrl.searchParams.get("type");
-
-//   if (!id || !type) return jsonResponse({ error: "Missing ID or type" }, 400);
-
-//   try {
-//     await deleteFromMongo(type as EntityType, id);
-//     return jsonResponse({ message: `${type} deleted successfully!` });
-//   } catch (error) {
-//     if (error instanceof DeletionBlockedError) {
-//       // For business logic errors, return a 400 status.
-//       return jsonResponse({ error: error.message }, 400);
-//     }
-//     // For other errors, return 500.
-//     return jsonResponse(
-//       { error: error instanceof Error ? error.message : `Error deleting ${type}` },
-//       500
-//     );
-//   }
-// }
-
-// /**
-//  * Handles updating an entity in the database dynamically.
-//  */
-// async function handlePutRequest(req: NextRequest, entityType: EntityType) {
-//   try {
-//     await client.connect();
-//     const timestamp = new Date();
-//     const formData = await req.formData();
-//     const id = formData.get("_id") as string;
-//     const collection = database.collection(entityType);
-
-//     const entityConfig: Record<
-//       EntityType,
-//       {
-//         fields: string[];
-//         process: (data: any, existingData: any) => Promise<any>;
-//         subEntities?: Record<
-//           string,
-//           { fields: string[]; process: (data: any, existingData: any) => Promise<any> }
-//         >;
-//       }
-//     > = {
-//       employees: {
-//         fields: [
-//           "name",
-//           "email",
-//           "password",
-//           "profileImg",
-//           "document",
-//           "phone",
-//           "dob",
-//           "address",
-//           "type",
-//         ],
-//         process: async (data, existingData) => {          
-//           data.password = await processPassword(data.password, existingData.password);
-
-//           if (data.email || data.name) {
-//             data.email = data.email || existingData.email;
-//             data.name = data.name || existingData.name;
-//           }
-
-//           data.dob = processDate(data.dob, existingData.dob);
-
-//           data.profileImg = await handleFileUpdate({
-//             newFile: data.profileImg,
-//             existingFile: existingData.profileImg,
-//             fieldName: "profileImg",
-//             email: data.email,
-//             saveFile: saveBase64File,
-//             deleteFile,
-//           });
-
-//           data.document = await handleFileUpdate({
-//             newFile: data.document,
-//             existingFile: existingData.document,
-//             fieldName: "document",
-//             email: data.email,
-//             saveFile: saveBase64File,
-//             deleteFile,
-//           });
-
-//           return {
-//             ...data,
-//             updatedAt: timestamp,
-//           };
-//         },
-//         subEntities: {
-//           password: {
-//             fields: ["password"],
-//             process: async (data, existingData) => {
-//               data.password = await processPassword(data.password, existingData.password);
-//               return {
-//                 password: data.password,
-//                 updatedAt: timestamp,
-//               };
-//             },
-//           },
-//         },
-//       },
-//       roles: {
-//         fields: ["name"],
-//         process: async (data, existingData) => ({
-//           ...data,
-//           updatedAt: timestamp,
-//         }),
-//       },
-//       foods: {
-//         // fields: ["name", "price", "stock", "categoryId", "foodCategories", "image" ],
-//         // fields: ["name", "price", "stock"],
-//         // process: async (data, existingData) => ({
-//         //   ...data,
-//         //   createdAt: timestamp,
-//         //   updatedAt: timestamp,
-//         // }),
-//         fields: ["name", "categoryId", "image"],
-//         process: async (data, existingData) => {
-//           data.image = await handleFileUpdate({
-//             newFile: data.image,
-//             existingFile: existingData.image,
-//             fieldName: "image",
-//             email: data.name,
-//             saveFile: saveBase64File,
-//             deleteFile,
-//           });
-
-//           return {
-//             ...data,
-//             updatedAt: timestamp,
-//           };
-//         },
-//       },
-//       categories: {
-//         fields: ["name", "plans"],
-//         process: async (data, existingData) => ({
-//           ...data,
-//           updatedAt: timestamp,
-//         }),
-//       },
-//       users: {
-//         fields: ["name", "email", "password"],
-//         process: async (data, existingData) => {
-//           data.password = await processPassword(data.password, existingData.password);
-
-//           if (data.email || data.name) {
-//             data.email = data.email || existingData.email;
-//             data.name = data.name || existingData.name;
-//           }
-
-//           return {
-//             ...data,
-//             updatedAt: timestamp,
-//           };
-//         },
-//         subEntities: {
-//           password: {
-//             fields: ["password"],
-//             process: async (data, existingData) => {
-//               data.password = await processPassword(data.password, existingData.password);
-//               return {
-//                 password: data.password,
-//                 updatedAt: timestamp,
-//               };
-//             },
-//           },
-//         },
-//       },
-//       foodCategories: {
-//         fields: ["name"],
-//         process: async (data, existingData) => ({
-//           ...data,
-//           updatedAt: timestamp,
-//         }),
-//       },
-//       plans: {
-//         fields: [
-//           "name",
-//           "price",
-//           "foodSelections",
-//         ],
-//         process: async (data, existingData) => {
-//           data = convertFieldsToNumber(data, ["price"]);
-//           data = processSubTableField(data, "foodSelections", "totalFoodSelections");
-
-//           return {
-//             ...existingData,
-//             ...data,
-//             updatedAt: timestamp,
-//           };
-//         },
-//       },
-//     };
-
-//     // Check if a subentity update is requested
-//     const subEntity = req.nextUrl.searchParams.get("subEntity");
-//     let { fields, process } =
-//       entityConfig[entityType] || { fields: [], process: async (data) => data };
-
-//     if (subEntity) {
-//       if (entityConfig[entityType].subEntities && entityConfig[entityType].subEntities[subEntity]) {
-//         ({ fields, process } = entityConfig[entityType].subEntities[subEntity]);
-//       } else {
-//         return jsonResponse({ error: `Invalid subEntity for ${entityType}.` }, 400);
-//       }
-//     }
-
-//     // Validate required fields based on the chosen config (entity or subentity)
-//     const missingFields = fields.filter((field) => !formData.get(field));
-//     if (missingFields.length) {
-//       return jsonResponse({ error: `Missing fields: ${missingFields.join(", ")}` }, 400);
-//     }
-
-//     // Fetch existing record
-//     const existingData = await collection.findOne({ _id: new ObjectId(id) });
-//     if (!existingData) {
-//       return jsonResponse({ error: `${entityType} not found.` }, 404);
-//     }
-
-//     // Process update data
-//     const data = Object.fromEntries(fields.map((field) => [field, formData.get(field)]));
-//     const processedData = await process(data, existingData);
-
-//     // Update the record
-//     const result = await collection.updateOne(
-//       { _id: new ObjectId(id) },
-//       { $set: processedData }
-//     );
-
-//     if (result.modifiedCount === 0) {
-//       return jsonResponse({ error: `Failed to update ${entityType}.` }, 500);
-//     }
-
-//     const updatedRecord = await collection.findOne({ _id: new ObjectId(id) });
-//     return jsonResponse({ message: `${entityType} updated successfully!`, data: updatedRecord }, 202);
-//   } catch (error) {
-//     console.error(`Error updating ${entityType}:`, error);
-//     return jsonResponse({ error: `Error updating ${entityType}.` }, 500);
-//   } finally {
-//     await client.close();
-//   }
-// }
-
-// /**
-//  * Handles PUT request
-//  */
-// export async function PUT(req: NextRequest) {
-//   try {
-//     const entityTypeParam = req.nextUrl.searchParams.get("type");
-//     const entityType = entityTypes.includes(entityTypeParam as EntityType)
-//       ? (entityTypeParam as EntityType)
-//       : null;
-
-//     if (!entityType) {
-//       return jsonResponse({ error: "Invalid or missing entity type" }, 400);
-//     }
-
-//     return await handlePutRequest(req, entityType);
-//   } catch (error) {
-//     console.error("Error handling PUT request:", error);
-//     return jsonResponse({ error: "Failed to process the request." }, 500);
-//   }
-// }
-
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { promises as fs } from 'fs';
@@ -715,6 +201,14 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
         ...(method === "POST" ? { createdAt: timestamp } : {}),
       }),
     },
+    userTypes: {
+      fields: ["name"],
+      process: async (data, existingData) => ({
+        ...data,
+        updatedAt: timestamp,
+        ...(method === "POST" ? { createdAt: timestamp } : {}),
+      }),
+    },
     plans: {
       fields: ["name", "price", "foodSelections"],
       process: async (data, existingData) => {
@@ -764,14 +258,20 @@ async function handleEntityRequest({
       }
     }
     const { data, error } = await extractAndValidateData(formData, fields);
-    if (error) return jsonResponse({ error }, 400);
+    if (error) {
+      return jsonResponse({ error }, 400);
+    }
     let existingData: any;
     if (method === "PUT") {
       const id = formData.get("_id") as string;
-      if (!id) return jsonResponse({ error: "Missing _id for update." }, 400);
+      if (!id) {
+        return jsonResponse({ error: "Missing _id for update." }, 400);
+      }
       const collection = database.collection(entityType);
       existingData = await collection.findOne({ _id: new ObjectId(id) });
-      if (!existingData) return jsonResponse({ error: `${entityType} not found.` }, 404);
+      if (!existingData) {
+        return jsonResponse({ error: `${entityType} not found.` }, 404);
+      }
     }
     const processedData = await process(data, existingData);
     const collection = database.collection(entityType);
@@ -827,7 +327,9 @@ export async function PUT(req: NextRequest) {
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id") ?? undefined;
   const type = req.nextUrl.searchParams.get("type");
-  if (!type) return jsonResponse({ error: "Missing entity type" }, 400);
+  if (!type) {
+    return jsonResponse({ error: "Missing entity type" }, 400);
+  }
   try {
     const collection = database.collection(type);
     const data = id
@@ -856,7 +358,9 @@ async function deleteFromMongo(entity: EntityType, id: string) {
     return await withDatabase(async () => {
       const collection = database.collection(entity);
       const record = await collection.findOne({ _id: new ObjectId(id) });
-      if (!record) throw new Error(`${entity} not found.`);
+      if (!record) {
+        throw new Error(`${entity} not found.`);
+      }
       const relationMessages = await checkRelations(entity, id);
       if (relationMessages.length > 0) {
         throw new DeletionBlockedError(relationMessages.join(" "));
@@ -873,7 +377,9 @@ async function deleteFromMongo(entity: EntityType, id: string) {
         }
       }
       const result = await collection.deleteOne({ _id: new ObjectId(id) });
-      if (result.deletedCount === 0) throw new Error(`Failed to delete ${entity}.`);
+      if (result.deletedCount === 0) {
+        throw new Error(`Failed to delete ${entity}.`);
+      }
       return record;
     });
   } catch (error: any) {
@@ -885,7 +391,9 @@ async function deleteFromMongo(entity: EntityType, id: string) {
 export async function DELETE(req: NextRequest) {
   const id = req.nextUrl.searchParams.get("id");
   const type = req.nextUrl.searchParams.get("type");
-  if (!id || !type) return jsonResponse({ error: "Missing ID or type" }, 400);
+  if (!id || !type) {
+    return jsonResponse({ error: "Missing ID or type" }, 400);
+  }
   try {
     await deleteFromMongo(type as EntityType, id);
     return jsonResponse({ message: `${type} deleted successfully!` });
