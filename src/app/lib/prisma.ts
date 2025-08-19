@@ -12,7 +12,7 @@ const client = new MongoClient(MONGO_URI);
 /* ---------- Mongoose Connection ---------- */
 const connectToMongoose = async () => {
   if (mongoose.connection.readyState >= 1) {
-    console.log("✅ Mongoose is already connected.");
+    // console.log("✅ Mongoose is already connected.");
     return;
   }
 
@@ -21,7 +21,7 @@ const connectToMongoose = async () => {
       dbName: process.env.NEXT_MONGO_DB,
       bufferCommands: false,
     });
-    console.log("✅ MongoDB connected successfully via Mongoose.");
+    // console.log("✅ MongoDB connected successfully via Mongoose.");
   } catch (error) {
     console.error("❌ Mongoose connection error:", error);
     throw new Error("Failed to connect to Mongoose.");
@@ -33,7 +33,7 @@ let mongoClient: MongoClient | null = null;
 
 const connectToMongoClient = async () => {
   if (mongoClient) {
-    console.log("✅ MongoClient is already connected.");
+    // console.log("✅ MongoClient is already connected.");
     return mongoClient;
   }
 
@@ -42,7 +42,7 @@ const connectToMongoClient = async () => {
       serverSelectionTimeoutMS: 30000,
     });
     await mongoClient.connect();
-    console.log("✅ MongoDB connected successfully via MongoClient.");
+    // console.log("✅ MongoDB connected successfully via MongoClient.");
     return mongoClient;
   } catch (error) {
     console.error("❌ MongoClient connection error:", error);

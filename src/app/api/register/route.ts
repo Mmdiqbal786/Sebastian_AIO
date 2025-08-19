@@ -222,9 +222,51 @@
 //   }
 // }
 
+// import { NextRequest, NextResponse } from "next/server";
+// import { connectToMongoose } from "@/app/lib/prisma";
+// import Employee from "@/app/types/Employee";
+// import { saveToDatabase } from "@/app/lib/utils/saveToDatabase";
+// import { generateEmployeeId } from "@/app/lib/utils/generateEmployeeId";
+// import { assignRole } from "@/app/lib/utils/assignRole";
+// import { assignType } from "@/app/lib/utils/assignType";
+
+// export async function POST(req: NextRequest) {
+//   try {
+//     await connectToMongoose();
+//     const formData = await req.formData();
+
+//     const employeeCount = await Employee.countDocuments();
+//     const roleId = await assignRole(employeeCount === 0);
+//     const userType = await assignType(employeeCount === 0);
+//     const newEmployeeId = await generateEmployeeId();
+
+//     const result = await saveToDatabase({
+//       model: Employee,
+//       data: formData,
+//       requiredFields: ["name", "email", "password", "phone", "dob", "address"],
+//       requiredFiles: ["document","profileImg"],
+//       fileFields: ["document","profileImg"],
+//       hashPasswordField: "password",
+//       additionalFields: { employeeId: newEmployeeId, roleId, type: userType },
+//     });
+
+//     if (!result.success) {
+//       return NextResponse.json({ error: result.error }, { status: 400 });
+//     }
+
+//     return NextResponse.json(
+//       { message: "Employee registered successfully", id: result.id },
+//       { status: 201 }
+//     );
+//   } catch (error) {
+//     console.error("Error saving Employee:", error);
+//     return NextResponse.json({ error: "Error saving Employee." }, { status: 500 });
+//   }
+// }
+
 import { NextRequest, NextResponse } from "next/server";
 import { connectToMongoose } from "@/app/lib/prisma";
-import Employee from "@/app/types/Employee";
+import User from "@/app/types/User";
 import { saveToDatabase } from "@/app/lib/utils/saveToDatabase";
 import { generateEmployeeId } from "@/app/lib/utils/generateEmployeeId";
 import { assignRole } from "@/app/lib/utils/assignRole";
@@ -235,19 +277,19 @@ export async function POST(req: NextRequest) {
     await connectToMongoose();
     const formData = await req.formData();
 
-    const employeeCount = await Employee.countDocuments();
-    const roleId = await assignRole(employeeCount === 0);
-    const userType = await assignType(employeeCount === 0);
-    const newEmployeeId = await generateEmployeeId();
+    const userCount = await User.countDocuments();
+    const roleId = await assignRole(userCount === 0);
+    const userTypeId = await assignType(userCount === 0);
+    const newUserId = await generateEmployeeId();
 
     const result = await saveToDatabase({
-      model: Employee,
+      model: User,
       data: formData,
-      requiredFields: ["name", "email", "password", "phone", "dob", "address"],
-      requiredFiles: ["document","profileImg"],
-      fileFields: ["document","profileImg"],
+      requiredFields: ["name", "email", "password", "phone"],
+      requiredFiles: ["profileImg"],
+      fileFields: ["profileImg"],
       hashPasswordField: "password",
-      additionalFields: { employeeId: newEmployeeId, roleId, type: userType },
+      additionalFields: { userId: newUserId, roleId, userTypeId },
     });
 
     if (!result.success) {
@@ -255,11 +297,11 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json(
-      { message: "Employee registered successfully", id: result.id },
+      { message: "User registered successfully", id: result.id },
       { status: 201 }
     );
   } catch (error) {
-    console.error("Error saving Employee:", error);
-    return NextResponse.json({ error: "Error saving Employee." }, { status: 500 });
+    console.error("Error saving User:", error);
+    return NextResponse.json({ error: "Error saving User." }, { status: 500 });
   }
 }

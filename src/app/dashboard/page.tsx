@@ -133,7 +133,7 @@ export default function DashboardPage() {
       <div className="px-4 py-20 md:px-6">
         {/* header */}
         <h1 className="text-2xl md:text-3xl font-bold mb-4">
-          Welcome to your Tarmack account, Deepak!
+          Welcome!
         </h1>
 
         {/* main two-column layout */}
@@ -164,7 +164,7 @@ export default function DashboardPage() {
                 <h3 className="text-lg font-semibold mb-2">Agreements</h3>
                 <p className="text-gray-700">
                   You have <b>24</b> Employee agreements available in your
-                  Tarmack account.
+                  account.
                 </p>
                 <button className="mt-4 bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium px-4 py-2 rounded">
                   Access My Agreements

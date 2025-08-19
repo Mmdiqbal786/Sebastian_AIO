@@ -128,8 +128,45 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
     //     data.updatedAt = timestamp;
     //     return data;
     //   },
+    // users: {
+    //   fields: ["name", "email", "password", "profileImg", "categoryId", "phone", "planId", "address", "foodSelections", "totalDays", "price", "validFrom", "validTill", "timeSlot" ],
+    //   process: async (data, existingData) => {
+    //     if (method === "PUT" && existingData) {
+    //       data.password = await processPassword(data.password, existingData.password);
+    //       data.profileImg = await handleFileUpdate({
+    //         newFile: data.profileImg,
+    //         existingFile: existingData.profileImg,
+    //         fieldName: "profileImg",
+    //         email: data.email,
+    //         saveFile: saveBase64File,
+    //         deleteFile,
+    //       });
+    //       await updateDaysAndPrice(data);
+    //     } else {
+    //       await connectToMongoose();
+    //       const role = await findOrCreateRole(data.role || "user");
+    //       data.profileImg = await saveBase64File(data.profileImg, "profileImg", data.email);
+    //       data.password = await hashPassword(data.password);
+    //       data.roleId = role._id;
+    //       data.createdAt = timestamp;
+    //       await updateDaysAndPrice(data);
+    //     }
+    //     data = processFoodSelections(data, "foodSelections");
+    //     data.updatedAt = timestamp;
+    //     return data;
+    //   },
+    //   subEntities: {
+    //     password: {
+    //       fields: ["password"],
+    //       process: async (data, existingData) => ({
+    //         password: await processPassword(data.password, existingData.password),
+    //         updatedAt: timestamp,
+    //       }),
+    //     },
+    //   },
+    // },
     users: {
-      fields: ["name", "email", "password", "profileImg", "categoryId", "phone", "planId", "address", "foodSelections", "totalDays", "price", "validFrom", "validTill", "timeSlot" ],
+      fields: ["name", "email", "password", "profileImg", "phone", "userTypeId" ],
       process: async (data, existingData) => {
         if (method === "PUT" && existingData) {
           data.password = await processPassword(data.password, existingData.password);
@@ -141,17 +178,15 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
             saveFile: saveBase64File,
             deleteFile,
           });
-          await updateDaysAndPrice(data);
         } else {
           await connectToMongoose();
           const role = await findOrCreateRole(data.role || "user");
           data.profileImg = await saveBase64File(data.profileImg, "profileImg", data.email);
           data.password = await hashPassword(data.password);
+          data.userId = await generateEmployeeId();
           data.roleId = role._id;
           data.createdAt = timestamp;
-          await updateDaysAndPrice(data);
         }
-        data = processFoodSelections(data, "foodSelections");
         data.updatedAt = timestamp;
         return data;
       },
@@ -224,6 +259,14 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
     },
     slots: {
       fields: ["name", "time"],
+      process: async (data, existingData) => ({
+        ...data,
+        updatedAt: timestamp,
+        ...(method === "POST" ? { createdAt: timestamp } : {}),
+      }),
+    },
+    paths: {
+      fields: ["name", "path"],
       process: async (data, existingData) => ({
         ...data,
         updatedAt: timestamp,
