@@ -2,6 +2,7 @@
 import mongoose from "mongoose";
 import UserRole from "@/app/types/Role";
 import Employee from "@/app/types/Employee";
+import User from "@/app/types/User";
 import Plan from "@/app/types/Plan";
 
 /**
@@ -41,14 +42,24 @@ export async function findRecord<T extends keyof mongoose.Model<any>>(
 /**
  * Generate a unique employee ID based on the last user in the database.
  */
+// export const generateEmployeeId = async (): Promise<string> => {
+//   const lastUser = await Employee.findOne({}, { employeeId: 1 }).sort({ employeeId: -1 });
+//   let newEmployeeId = "ACE000001";
+//   if (lastUser?.employeeId) {
+//     const lastNumber = parseInt(lastUser.employeeId.replace("ACE", ""), 10);
+//     newEmployeeId = `ACE${String(lastNumber + 1).padStart(6, "0")}`;
+//   }
+//   return newEmployeeId;
+// };
+
 export const generateEmployeeId = async (): Promise<string> => {
-  const lastUser = await Employee.findOne({}, { employeeId: 1 }).sort({ employeeId: -1 });
-  let newEmployeeId = "ACE000001";
-  if (lastUser?.employeeId) {
-    const lastNumber = parseInt(lastUser.employeeId.replace("ACE", ""), 10);
-    newEmployeeId = `ACE${String(lastNumber + 1).padStart(6, "0")}`;
+  const lastUser = await User.findOne({}, { userId: 1 }).sort({ userId: -1 });
+  let newUserId = "ACE000001";
+  if (lastUser?.userId) {
+    const lastNumber = parseInt(lastUser.userId.replace("ACE", ""), 10);
+    newUserId = `ACE${String(lastNumber + 1).padStart(6, "0")}`;
   }
-  return newEmployeeId;
+  return newUserId;
 };
 
 /**
@@ -184,7 +195,9 @@ export async function updateDaysAndPrice(data: {
 export function transformDynamicGroupValue(rawValue: any): Record<string, string[]> {
   let transformedValue: Record<string, string[]> = {};
 
-  if (!rawValue) return transformedValue;
+  if (!rawValue) {
+    return transformedValue;
+  }
 
   // If the value is a string, parse it first
   const parsedValue = typeof rawValue === "string" ? JSON.parse(rawValue) : rawValue;

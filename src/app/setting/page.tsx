@@ -16,8 +16,8 @@ type FormData = {
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
-  const [currentLogo, setCurrentLogo] = useState<string | null>(null); // Server-provided logo path
-  const [previewUrl, setPreviewUrl] = useState<string | null>(null); // Blob URL for preview
+  const [currentLogo, setCurrentLogo] = useState<string | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [cacheBuster, setCacheBuster] = useState<number>(Date.now());
 
@@ -34,7 +34,9 @@ export default function SettingsPage() {
     async function fetchSettings() {
       try {
         const res = await fetch("/api/settings");
-        if (!res.ok) throw new Error("Failed to fetch settings");
+        if (!res.ok) {
+          throw new Error("Failed to fetch settings");
+        }
         
         const data = await res.json();
         Object.entries(data).forEach(([key, value]) => {
@@ -88,7 +90,9 @@ export default function SettingsPage() {
     const uploadedFile = event.target.files?.[0];
     if (uploadedFile) {
       setFile(uploadedFile);
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+      }
       setPreviewUrl(URL.createObjectURL(uploadedFile));
     }
   };
