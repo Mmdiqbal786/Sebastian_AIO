@@ -135,6 +135,15 @@ export interface IUser extends Document {
   password: string;
   userTypeId: mongoose.Types.ObjectId;
   roleId: mongoose.Types.ObjectId;
+  permissions?: Record<
+    string,
+    {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    }
+  >;
 }
 
 export const UserSchema = new Schema<IUser>(

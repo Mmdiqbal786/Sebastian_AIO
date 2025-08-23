@@ -8,7 +8,10 @@ export default function UserTypePage() {
       <DetailsPage<IUserType>
         apiType="userTypes"
         title="User Type Info"
-        fieldLabels={{ name: "Name" }}
+        fieldLabels={{ 
+          name: "Name",
+          isActive: "Active", 
+        }}
       />
     </InfoLayout>
   );

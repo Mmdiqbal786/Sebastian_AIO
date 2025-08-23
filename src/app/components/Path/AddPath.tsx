@@ -12,6 +12,16 @@ const AddPaths = ({ onSuccess }: { onSuccess: (paths: any) => void }) => {
     { name: "slash", type: "text", label: "Slash", placeholder: "Enter Slash", required: true },
     { name: "icon", type: "text", label: "Icon", placeholder: "Enter Icon", required: true },
     { name: "iconImport", type: "text", label: "Icon Import", placeholder: "Enter Icon Import", required: true },
+    { name: "showInSidebar", 
+      type: "select",
+      label: "show In Sidebar",
+      required: true, 
+      options: [
+        { label: "Yes", value: "true" },
+        { label: "No", value: "false" },
+      ] 
+    },
+    { name: "isActive", type: "hidden", required: false, value: true  },
   ];
 
   return (

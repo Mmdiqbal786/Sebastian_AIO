@@ -25,6 +25,7 @@ const DashboardRoles: React.FC<DashboardRolesProps> = ({
       entity="roles"
       columns={[
         { key: "name", label: "Name", sortable: true },
+        { key: "isActive", label: "Active", sortable: true },
       ]}
       searchFields={["name"]}
       onClickEdit={onClickEdit}

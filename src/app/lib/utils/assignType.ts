@@ -6,7 +6,7 @@
 import UserType from "@/app/types/UserType";
 
 export async function assignType(isFirstUser: boolean): Promise<string> {
-  const typeName = isFirstUser ? "System" : "Guest";
+  const typeName = isFirstUser ? "system" : "user";
   let userType = await UserType.findOne({ name: typeName }).exec();
 
   if (!userType) {

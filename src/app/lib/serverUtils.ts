@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import mongoose from "mongoose";
 import UserRole from "@/app/types/Role";
+import UserType from "@/app/types/UserType";
 import Employee from "@/app/types/Employee";
 import User from "@/app/types/User";
 import Plan from "@/app/types/Plan";
@@ -18,6 +19,21 @@ export const findOrCreateRole = async (roleName: string) => {
   }
 
   return role;
+};
+
+/**
+ * Find or create a user role in the database.
+ */
+export const findOrCreateUserType = async (userType: string) => {
+  let type = await UserType.findOne({ name: userType }).exec();
+
+  if (!type) {
+    type = await UserType.create({
+      name: userType
+    });
+  }
+
+  return type;
 };
 
 /**

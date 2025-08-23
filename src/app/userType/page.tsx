@@ -14,6 +14,15 @@ export default function UserTypesPage() {
       breadcrumbLink="userType"
       fields={[
         { name: "name", type: "text", label: "Name", required: true },
+        { name: "isActive", 
+          type: "select",
+          label: "Active",
+          required: true, 
+          options: [
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" },
+          ] 
+        },
       ]}
       AddComponent={AddUserType}
       DashboardComponent={DashboardUserType}

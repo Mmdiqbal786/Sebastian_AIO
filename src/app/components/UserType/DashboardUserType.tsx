@@ -25,6 +25,7 @@ const DashboardUserTypes: React.FC<DashboardUserTypesProps> = ({
       entity="userTypes"
       columns={[
         { key: "name", label: "Name", sortable: true },
+        { key: "isActive", label: "Active", sortable: true },
       ]}
       path="userType"
       searchFields={["name"]}

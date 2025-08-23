@@ -103,7 +103,7 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
       },
     },
     roles: {
-      fields: ["name"],
+      fields: ["name", "isActive"],
       process: async (data, existingData) => ({
         ...data,
         updatedAt: timestamp,
@@ -166,7 +166,7 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
     //   },
     // },
     users: {
-      fields: ["name", "email", "password", "profileImg", "phone", "userTypeId" ],
+      fields: ["name", "email", "password", "profileImg", "phone", "userTypeId"],
       process: async (data, existingData) => {
         if (method === "PUT" && existingData) {
           data.password = await processPassword(data.password, existingData.password);
@@ -237,7 +237,7 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
       }),
     },
     userTypes: {
-      fields: ["name"],
+      fields: ["name", "isActive"],
       process: async (data, existingData) => ({
         ...data,
         updatedAt: timestamp,
@@ -266,7 +266,31 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
       }),
     },
     paths: {
-      fields: ["name", "path"],
+      fields: ["name", "path", "slash", "icon", "iconImport", "showInSidebar", "isActive"],
+      process: async (data, existingData) => ({
+        ...data,
+        updatedAt: timestamp,
+        ...(method === "POST" ? { createdAt: timestamp } : {}),
+      }),
+    },
+    rolePermissions: {
+      fields: ["name", "roleId", "pathId", "canView", "canCreate", "canEdit", "canDelete", "isActive"],
+      process: async (data, existingData) => ({
+        ...data,
+        updatedAt: timestamp,
+        ...(method === "POST" ? { createdAt: timestamp } : {}),
+      }),
+    },
+    userPermissions: {
+      fields: ["name", "userId", "pathId", "canView", "canCreate", "canEdit", "canDelete", "isActive"],
+      process: async (data, existingData) => ({
+        ...data,
+        updatedAt: timestamp,
+        ...(method === "POST" ? { createdAt: timestamp } : {}),
+      }),
+    },
+    statuses: {
+      fields: ["name", "isActive"],
       process: async (data, existingData) => ({
         ...data,
         updatedAt: timestamp,

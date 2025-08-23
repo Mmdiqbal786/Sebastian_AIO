@@ -8,7 +8,10 @@ export default function RolePage() {
       <DetailsPage<IRole>
         apiType="roles"
         title="Role Info"
-        fieldLabels={{ name: "Name"}}
+        fieldLabels={{ 
+          name: "Name",
+          isActive: "Active",
+        }}
       />
     </InfoLayout>
   );

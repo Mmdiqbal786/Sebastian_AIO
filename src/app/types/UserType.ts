@@ -4,11 +4,13 @@ export interface IUserType extends Document {
   [key: string]: unknown;
   _id: mongoose.Types.ObjectId;
   name: string;
+  isActive?: boolean;
 }
 
 export const UserTypeSchema = new Schema<IUserType>(
   {
     name: { type: String, required: true, unique: true },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true, collection: "userTypes"  }
 );
