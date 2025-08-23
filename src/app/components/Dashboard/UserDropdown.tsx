@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState, useRef, useEffect } from "react";
-import Image from "next/image";
+// import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCurrentUser } from "@/app/lib/data/useCurrentUser";
 import { useGlobalLoader } from "@/app/context/GlobalLoaderContext";
 import { useLogout } from "@/app/hooks/useLogout";
+import SafeImage from "@/app/lib/utils/SafeImage";
 
 const UserDropdown = () => {
   const logout = useLogout();
@@ -60,11 +61,18 @@ const UserDropdown = () => {
         className="flex items-center gap-2 px-3 py-2 rounded-md transition-all focus:outline-none"
         onClick={() => setDropdownOpen((open) => !open)}
       >
-        <Image
+        {/* <Image
           src={user.profileImg ? `/${user.profileImg}` : "/noProfileImg.png"}
           height={50}
           width={50}
           alt="profile Image"
+          className="rounded-full object-cover"
+        /> */}
+        <SafeImage
+          src={user.profileImg ? `/${user.profileImg}` : "/noProfileImg.png"}
+          height={50}
+          width={50}
+          alt="Profile image"
           className="rounded-full object-cover"
         />
         <span className="hidden md:inline">{user.email}</span>

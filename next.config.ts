@@ -1,21 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  images: {
+    qualities: [75, 90, 100],
+    localPatterns: [
+    {
+      pathname: "/**",
+    },
+  ],
+  },
 };
-
-// const nextConfig: NextConfig = {
-//   webpack: (config, { isServer }) => {
-//     if (!isServer) {
-//       config.resolve.fallback = {
-//         net: false,
-//         tls: false,
-//         child_process: false,
-//         fs: false,
-//       };
-//     }
-//     return config;
-//   },
-// };
 
 export default nextConfig;

@@ -8,6 +8,8 @@ export interface IPath extends Document {
   slash: string;
   icon: string;
   iconImport: string;
+  showInSidebar?: boolean;
+  isActive?: boolean;
 }
 
 const PathSchema = new Schema<IPath>(
@@ -17,6 +19,8 @@ const PathSchema = new Schema<IPath>(
     slash: { type: String, required: true },
     icon: { type: String, required: true },
     iconImport: { type: String, required: true },
+    showInSidebar: { type: Boolean, required: true },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true, collection: "paths"  }
 );

@@ -13,7 +13,9 @@ export default function PathPage() {
           path: "Path",
           slash: "Slash",
           icon: "Icon",
-          iconImport: "Icon Import"
+          iconImport: "Icon Import",
+          showInSidebar: "Show In Sidebar",
+          isActive: "Active",
         }}
       />
     </InfoLayout>

@@ -9,6 +9,7 @@ const AddUserTypes = ({ onSuccess }: { onSuccess: (foods: any) => void }) => {
 
   const formFields: FormField[] = [
     { name: "name", type: "text", label: "Name", placeholder: "Enter Name", required: true },
+    { name: "isActive", type: "hidden", required: false, value: true  },
   ];
 
   return (
