@@ -110,61 +110,6 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
         ...(method === "POST" ? { createdAt: timestamp } : {}),
       }),
     },
-    // users: {
-    //   fields: ["name", "email", "password"],
-    //   process: async (data, existingData) => {
-    //     if (method === "PUT" && existingData) {
-    //       data.password = await processPassword(data.password, existingData.password);
-    //     } else {
-    //       data.password = await hashPassword(data.password);
-    //       const role = await findOrCreateRole(data.role || "user");
-    //       data.roleId = role._id;
-    //       data.createdAt = timestamp;
-    //     }
-    //     if (data.email || data.name) {
-    //       data.email = data.email || existingData?.email;
-    //       data.name = data.name || existingData?.name;
-    //     }
-    //     data.updatedAt = timestamp;
-    //     return data;
-    //   },
-    // users: {
-    //   fields: ["name", "email", "password", "profileImg", "categoryId", "phone", "planId", "address", "foodSelections", "totalDays", "price", "validFrom", "validTill", "timeSlot" ],
-    //   process: async (data, existingData) => {
-    //     if (method === "PUT" && existingData) {
-    //       data.password = await processPassword(data.password, existingData.password);
-    //       data.profileImg = await handleFileUpdate({
-    //         newFile: data.profileImg,
-    //         existingFile: existingData.profileImg,
-    //         fieldName: "profileImg",
-    //         email: data.email,
-    //         saveFile: saveBase64File,
-    //         deleteFile,
-    //       });
-    //       await updateDaysAndPrice(data);
-    //     } else {
-    //       await connectToMongoose();
-    //       const role = await findOrCreateRole(data.role || "user");
-    //       data.profileImg = await saveBase64File(data.profileImg, "profileImg", data.email);
-    //       data.password = await hashPassword(data.password);
-    //       data.roleId = role._id;
-    //       data.createdAt = timestamp;
-    //       await updateDaysAndPrice(data);
-    //     }
-    //     data = processFoodSelections(data, "foodSelections");
-    //     data.updatedAt = timestamp;
-    //     return data;
-    //   },
-    //   subEntities: {
-    //     password: {
-    //       fields: ["password"],
-    //       process: async (data, existingData) => ({
-    //         password: await processPassword(data.password, existingData.password),
-    //         updatedAt: timestamp,
-    //       }),
-    //     },
-    //   },
-    // },
     users: {
       fields: ["name", "email", "password", "profileImg", "phone", "userTypeId"],
       process: async (data, existingData) => {
@@ -183,7 +128,6 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
           const role = await findOrCreateRole(data.role || "user");
           data.profileImg = await saveBase64File(data.profileImg, "profileImg", data.email);
           data.password = await hashPassword(data.password);
-          data.userId = await generateEmployeeId();
           data.roleId = role._id;
           data.createdAt = timestamp;
         }
@@ -198,6 +142,28 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
             updatedAt: timestamp,
           }),
         },
+      },
+    },
+    projects: {
+      fields: ["name", "client", "owner", "headCount", "statusId", "isActive"],
+      process: async (data, existingData) => ({
+        ...data,
+        updatedAt: timestamp,
+        ...(method === "POST" ? { createdAt: timestamp } : {}),
+      }),
+    },
+    expenses: {
+      fields: ["name", "projectId", "description", "entryDate", "cost", "statusId", "isActive"],
+      process: async (data, existingData) => {
+        if (method === "PUT" && existingData) {
+          data.entryDate = processDate(data.entryDate, existingData.entryDate);
+        } else {
+          await connectToMongoose();
+          data.entryDate = formatDateWithTimezone(data.entryDate);
+          data.createdAt = timestamp;
+        }
+        data.updatedAt = timestamp;
+        return data;
       },
     },
     foods: {
@@ -274,7 +240,7 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
       }),
     },
     rolePermissions: {
-      fields: ["name", "roleId", "pathId", "canView", "canCreate", "canEdit", "canDelete", "isActive"],
+      fields: ["roleId", "pathId", "canView", "canCreate", "canEdit", "canDelete", "isActive"],
       process: async (data, existingData) => ({
         ...data,
         updatedAt: timestamp,
@@ -282,7 +248,7 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
       }),
     },
     userPermissions: {
-      fields: ["name", "userId", "pathId", "canView", "canCreate", "canEdit", "canDelete", "isActive"],
+      fields: ["userId", "pathId", "canView", "canCreate", "canEdit", "canDelete", "isActive"],
       process: async (data, existingData) => ({
         ...data,
         updatedAt: timestamp,

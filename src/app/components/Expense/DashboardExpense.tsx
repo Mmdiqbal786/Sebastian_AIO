@@ -2,17 +2,17 @@
 
 import DashboardList from "@/app/components/DashboardList";
 import { mongoose } from "@/app/lib/prisma";
-import { IUser } from "@/app/types/User";
+import { IExpense } from "@/app/types/Expense";
 
-interface DashboardUsersProps {
-  data: IUser[];
+interface DashboardExpensesProps {
+  data: IExpense[];
   onClickEdit: (_id: mongoose.Types.ObjectId) => void;
   onClickEditPassword?: (_id: mongoose.Types.ObjectId) => void;
   onClickDelete: (_id: mongoose.Types.ObjectId) => void;
   onClickShow?: (_id: mongoose.Types.ObjectId) => void;
 }
 
-const DashboardUsers: React.FC<DashboardUsersProps> = ({
+const DashboardExpenses: React.FC<DashboardExpensesProps> = ({
   data,
   onClickEdit,
   onClickEditPassword,
@@ -20,17 +20,17 @@ const DashboardUsers: React.FC<DashboardUsersProps> = ({
   onClickShow,
 }) => {
   return (
-    <DashboardList<IUser>
+    <DashboardList<IExpense>
       data={data}
-      entity="users"
+      entity="expenses"
       columns={[
         { key: "name", label: "Name", sortable: true },
-        { key: "email", label: "Email", sortable: true },
-        { key: "phone", label: "Phone" },
-        { key: "profileImg", label: "Profile Image" },
+        { key: "description", label: "Description", sortable: true },
+        { key: "entryDate", label: "Entry Date", sortable: true },
+        { key: "cost", label: "Cost", sortable: true },
       ]}
-      searchFields={["name", "email"]}
-      downloadFields={["profileImg"]}
+      path="expense"
+      searchFields={["name"]}
       onClickEdit={onClickEdit}
       onClickEditPassword={onClickEditPassword}
       onClickDelete={onClickDelete}
@@ -39,4 +39,4 @@ const DashboardUsers: React.FC<DashboardUsersProps> = ({
   );
 };
 
-export default DashboardUsers;
+export default DashboardExpenses;

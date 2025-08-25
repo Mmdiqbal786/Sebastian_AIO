@@ -9,7 +9,6 @@ const AddRolePermissions = ({ onSuccess }: { onSuccess: (roles: any) => void }) 
   const { formattedData: formattedRoles } = useFetchData<{ _id: string; name: string }>("roles");
   const { formattedData: formattedPaths } = useFetchData<{ _id: string; name: string }>("paths");
   const formFields: FormField[] = [
-    { name: "name", type: "text", label: "Name", placeholder: "Enter Name", required: true },
     { 
       name: "roleId",
       type: "select",

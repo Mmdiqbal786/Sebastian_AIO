@@ -16,7 +16,6 @@ export default function RolePermissionsPage() {
       breadcrumbText="Role Permissions"
       breadcrumbLink="rolePermission"
       fields={[
-        { name: "name", type: "text", label: "Name", required: true },
         { 
           name: "roleId",
           type: "select",

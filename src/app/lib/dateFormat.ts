@@ -7,7 +7,9 @@ const formatDate = (datetimeString: string, months: string[]): string => {
 };
 
 export const processDate = (newDateValue: string | Date | undefined, existingDateValue: string | Date | undefined) => {
-  if (!newDateValue) return existingDateValue;
+  if (!newDateValue) {
+    return existingDateValue;
+  }
   const newDate = new Date(newDateValue);
   const existingDate = existingDateValue ? new Date(existingDateValue) : null;
   if (isNaN(newDate.getTime())) {
@@ -20,9 +22,13 @@ export const processDate = (newDateValue: string | Date | undefined, existingDat
 };
 
 export const formatDateWithTimezone = (dateValue: string | Date | undefined): Date | undefined => {
-  if (!dateValue) return undefined;
+  if (!dateValue) {
+    return undefined;
+  }
   const localDate = new Date(dateValue);
-  if (isNaN(localDate.getTime())) return undefined;
+  if (isNaN(localDate.getTime())) {
+    return undefined;
+  }
   return new Date(localDate.getTime() - localDate.getTimezoneOffset() * 60000);
 };
 
@@ -51,3 +57,31 @@ export function formatDateOrTime(dateString: string): string {
 }
 
 export default formatDate;
+
+/**
+ * Check if a value is a valid ISO date string (with or without time)
+ */
+export const isISODate = (value: any): boolean => {
+  if (typeof value !== "string") {
+    return false;
+  }
+
+  // Matches YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss(.sss)Z
+  const isoRegex =
+    /^\d{4}-\d{2}-\d{2}(?:T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?(?:Z|([+-]\d{2}:\d{2}))?)?$/;
+
+  return isoRegex.test(value);
+};
+
+// Strict ISO date check (YYYY-MM-DD or YYYY-MM-DDTHH:mm)
+export const isISODateStrict = (value: any): boolean => {
+  return (
+    typeof value === "string" &&
+    (/^\d{4}-\d{2}-\d{2}$/.test(value) || /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(value))
+  );
+};
+
+// General ISO-compatible date check (uses Date.parse)
+export const isISODateLoose = (value: any): boolean => {
+  return typeof value === "string" && !isNaN(Date.parse(value));
+};

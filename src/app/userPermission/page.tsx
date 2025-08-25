@@ -16,7 +16,6 @@ export default function UserPermissionsPage() {
       breadcrumbText="User Permissions"
       breadcrumbLink="userPermission"
       fields={[
-        { name: "name", type: "text", label: "Name", required: true },
         { 
           name: "userId",
           type: "select",

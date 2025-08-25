@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import User from "@/app/types/User";
 import RolePermission from "@/app/types/RolePermission";
 import UserPermission from "@/app/types/UserPermission";
@@ -42,15 +43,30 @@ export async function checkPermission(
 /**
  * Resolve which action permission to return
  */
+// function resolveAction(
+//   permission: { canView: boolean; canCreate: boolean; canEdit: boolean; canDelete: boolean },
+//   action: "view" | "create" | "edit" | "delete"
+// ) {
+//   switch (action) {
+//     case "view": return permission.canView;
+//     case "create": return permission.canCreate;
+//     case "edit": return permission.canEdit;
+//     case "delete": return permission.canDelete;
+//     default: return false;
+//   }
+// }
+
 function resolveAction(
-  permission: { canView: boolean; canCreate: boolean; canEdit: boolean; canDelete: boolean },
+  permission: { canView: any; canCreate: any; canEdit: any; canDelete: any },
   action: "view" | "create" | "edit" | "delete"
 ) {
+  const normalize = (val: any) => val === true || val === "true";
+
   switch (action) {
-    case "view": return permission.canView;
-    case "create": return permission.canCreate;
-    case "edit": return permission.canEdit;
-    case "delete": return permission.canDelete;
+    case "view": return normalize(permission.canView);
+    case "create": return normalize(permission.canCreate);
+    case "edit": return normalize(permission.canEdit);
+    case "delete": return normalize(permission.canDelete);
     default: return false;
   }
 }
