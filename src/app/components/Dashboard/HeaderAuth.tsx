@@ -1,7 +1,7 @@
 "use client";
 
 import Logo from "@/app/lib/Logo";
-import { HomePath, LoginPath, RegisterPath } from "@/app/lib/path";
+import { HomePath, LoginPath } from "@/app/lib/path";
 import Link from "next/link";
 
 const Header = () => {
@@ -13,9 +13,9 @@ const Header = () => {
           <Link href={LoginPath} className="text-blue-600 hover:underline">
             Login
           </Link>
-          <Link href={RegisterPath} className="text-blue-600 hover:underline">
+          {/* <Link href={RegisterPath} className="text-blue-600 hover:underline">
             Register
-          </Link>
+          </Link> */}
         </div>
       </div>
     </header>

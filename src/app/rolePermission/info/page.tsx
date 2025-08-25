@@ -9,7 +9,7 @@ export default function RolePermissionPage() {
         apiType="rolePermissions"
         title="Role Permission Info"
         fieldLabels={{ 
-          name: "Name",
+          _id: "Name",
           canView: "View",
           canCreate: "Create",
           canEdit: "Edit",

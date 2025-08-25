@@ -2,17 +2,17 @@
 
 import DashboardList from "@/app/components/DashboardList";
 import { mongoose } from "@/app/lib/prisma";
-import { IUser } from "@/app/types/User";
+import { IProject } from "@/app/types/Project";
 
-interface DashboardUsersProps {
-  data: IUser[];
+interface DashboardProjectsProps {
+  data: IProject[];
   onClickEdit: (_id: mongoose.Types.ObjectId) => void;
   onClickEditPassword?: (_id: mongoose.Types.ObjectId) => void;
   onClickDelete: (_id: mongoose.Types.ObjectId) => void;
   onClickShow?: (_id: mongoose.Types.ObjectId) => void;
 }
 
-const DashboardUsers: React.FC<DashboardUsersProps> = ({
+const DashboardProjects: React.FC<DashboardProjectsProps> = ({
   data,
   onClickEdit,
   onClickEditPassword,
@@ -20,17 +20,17 @@ const DashboardUsers: React.FC<DashboardUsersProps> = ({
   onClickShow,
 }) => {
   return (
-    <DashboardList<IUser>
+    <DashboardList<IProject>
       data={data}
-      entity="users"
+      entity="projects"
       columns={[
         { key: "name", label: "Name", sortable: true },
-        { key: "email", label: "Email", sortable: true },
-        { key: "phone", label: "Phone" },
-        { key: "profileImg", label: "Profile Image" },
+        { key: "client", label: "Client", sortable: true },
+        { key: "owner", label: "Owner", sortable: true },
+        { key: "headCount", label: "Head Count", sortable: true },
       ]}
-      searchFields={["name", "email"]}
-      downloadFields={["profileImg"]}
+      path="project"
+      searchFields={["name"]}
       onClickEdit={onClickEdit}
       onClickEditPassword={onClickEditPassword}
       onClickDelete={onClickDelete}
@@ -39,4 +39,4 @@ const DashboardUsers: React.FC<DashboardUsersProps> = ({
   );
 };
 
-export default DashboardUsers;
+export default DashboardProjects;

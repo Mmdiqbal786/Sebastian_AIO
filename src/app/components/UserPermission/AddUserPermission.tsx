@@ -9,7 +9,6 @@ const AddUserPermissions = ({ onSuccess }: { onSuccess: (userPermissions: any) =
   const { formattedData: formattedUsers } = useFetchData<{ _id: string; name: string }>("users");
   const { formattedData: formattedPaths } = useFetchData<{ _id: string; name: string }>("paths");
   const formFields: FormField[] = [
-    { name: "name", type: "text", label: "Name", placeholder: "Enter Name", required: true },
     { 
       name: "userId",
       type: "select",

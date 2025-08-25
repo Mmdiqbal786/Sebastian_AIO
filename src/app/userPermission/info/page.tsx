@@ -9,7 +9,7 @@ export default function UserPermissionPage() {
         apiType="userPermissions"
         title="User Permission Info"
         fieldLabels={{ 
-          name: "Name",
+          _id: "Name",
           canView: "View",
           canCreate: "Create",
           canEdit: "Edit",

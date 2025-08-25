@@ -24,7 +24,7 @@ const DashboardRolePermissions: React.FC<DashboardRolePermissionsProps> = ({
       data={data}
       entity="rolePermissions"
       columns={[
-        { key: "name", label: "Name", sortable: true },
+        { key: "_id", label: "id", sortable: true },
         { key: "canView", label: "View", sortable: true },
         { key: "canCreate", label: "Create", sortable: true },
         { key: "canEdit", label: "Edit", sortable: true },
@@ -32,7 +32,7 @@ const DashboardRolePermissions: React.FC<DashboardRolePermissionsProps> = ({
         { key: "isActive", label: "Active", sortable: true },
       ]}
       path="rolePermission"
-      searchFields={["name"]}
+      searchFields={["_id"]}
       onClickEdit={onClickEdit}
       onClickEditPassword={onClickEditPassword}
       onClickDelete={onClickDelete}

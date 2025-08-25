@@ -4,17 +4,17 @@ import { IUser } from "@/app/types/User";
 
 // ----- Extend IUser to include permissions map ----- //
 
-// interface IUserWithPermissions extends IUser {
-//   permissions?: Record<
-//     string,
-//     {
-//       view: boolean;
-//       create: boolean;
-//       edit: boolean;
-//       delete: boolean;
-//     }
-//   >;
-// }
+interface IUserWithPermissions extends IUser {
+  permissions?: Record<
+    string,
+    {
+      view: boolean;
+      create: boolean;
+      edit: boolean;
+      delete: boolean;
+    }
+  >;
+}
 
 // ----- Extend IUser to include permissions map ----- //
 
@@ -22,13 +22,13 @@ export function useCurrentUser() {
 
   // ----- without permission ----- //
 
-  const [user, setUser] = useState<IUser | null>(null);
+  // const [user, setUser] = useState<IUser | null>(null);
 
   // ----- without permission ----- //
 
   // ----- with permission ----- //
 
-  // const [user, setUser] = useState<IUserWithPermissions | null>(null);
+  const [user, setUser] = useState<IUserWithPermissions | null>(null);
 
   // ----- with permission ----- //
   

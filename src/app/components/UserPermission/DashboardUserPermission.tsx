@@ -24,7 +24,7 @@ const DashboardUserPermissions: React.FC<DashboardUserPermissionsProps> = ({
       data={data}
       entity="userPermissions"
       columns={[
-        { key: "name", label: "Name", sortable: true },
+        { key: "_id", label: "id", sortable: true },
         { key: "canView", label: "View", sortable: true },
         { key: "canCreate", label: "Create", sortable: true },
         { key: "canEdit", label: "Edit", sortable: true },
@@ -32,7 +32,7 @@ const DashboardUserPermissions: React.FC<DashboardUserPermissionsProps> = ({
         { key: "isActive", label: "Active", sortable: true },
       ]}
       path="userPermission"
-      searchFields={["name"]}
+      searchFields={["_id"]}
       onClickEdit={onClickEdit}
       onClickEditPassword={onClickEditPassword}
       onClickDelete={onClickDelete}
