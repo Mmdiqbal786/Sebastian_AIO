@@ -4,12 +4,16 @@ import { Controller } from "react-hook-form";
 import { FormField } from "./types";
 
 const formatForDisplay = (value: string | undefined): string => {
-  if (!value) return "";
+  if (!value) {
+    return "";
+  }
   return value.includes("T") ? value.split("T")[0] : value;
 };
 
 const formatForStorage = (value: string): string => {
-  if (value.includes("T")) return value;
+  if (value.includes("T")) {
+    return value;
+  }
   return `${value}T00:00`;
 };
 

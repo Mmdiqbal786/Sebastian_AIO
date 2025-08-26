@@ -2,17 +2,17 @@
 
 import DashboardList from "@/app/components/DashboardList";
 import { mongoose } from "@/app/lib/prisma";
-import { IEmployee } from "@/app/types/Employee";
+import { IPayroll } from "@/app/types/Payroll";
 
-interface DashboardEmployeesProps {
-  data: IEmployee[];
+interface DashboardPayrollsProps {
+  data: IPayroll[];
   onClickEdit: (_id: mongoose.Types.ObjectId) => void;
   onClickEditPassword?: (_id: mongoose.Types.ObjectId) => void;
   onClickDelete: (_id: mongoose.Types.ObjectId) => void;
   onClickShow?: (_id: mongoose.Types.ObjectId) => void;
 }
 
-const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
+const DashboardPayrolls: React.FC<DashboardPayrollsProps> = ({
   data,
   onClickEdit,
   onClickEditPassword,
@@ -20,19 +20,20 @@ const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
   onClickShow,
 }) => {
   return (
-    <DashboardList<IEmployee>
+    <DashboardList<IPayroll>
       data={data}
-      entity="employees"
+      entity="payrolls"
       columns={[
         { key: "name", label: "Name", sortable: true },
-        { key: "email", label: "Email", sortable: true },
-        { key: "employeeId", label: "Employee ID" },
-        { key: "phone", label: "Phone" },
-        { key: "address", label: "Address" },
-        { key: "document", label: "Image" },
+        { key: "location", label: "Location", sortable: true },
+        { key: "month", label: "Month", sortable: true },
+        { key: "owner", label: "Owner", sortable: true },
+        { key: "payer", label: "Payer", sortable: true },
+        { key: "invoiceOrPayslip", label: "Invoice/Payslip", sortable: true },
+        { key: "payment", label: "Payment", sortable: true },
       ]}
-      searchFields={["name", "email"]}
-      downloadFields={["document"]}
+      path="payroll"
+      searchFields={["name"]}
       onClickEdit={onClickEdit}
       onClickEditPassword={onClickEditPassword}
       onClickDelete={onClickDelete}
@@ -41,4 +42,4 @@ const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
   );
 };
 
-export default DashboardEmployees;
+export default DashboardPayrolls;

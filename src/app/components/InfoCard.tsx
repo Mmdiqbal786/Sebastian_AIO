@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import Image from "next/image";
 import React from "react";
-import { formatDateOrTime, isISODate } from "@/app/lib/dateFormat";
+import { formatDateOrTimeFix, isISODate } from "@/app/lib/dateFormat";
 
 interface InfoCardProps<T extends Record<string, unknown>> {
   title: string;
@@ -12,9 +12,6 @@ interface InfoCardProps<T extends Record<string, unknown>> {
 
 const sanitizeHTML = (html: string) =>
   html.replace(/<script.*?>.*?<\/script>/gi, "");
-
-// const isISODate = (value: any): boolean =>
-//   typeof value === "string" && !isNaN(Date.parse(value));
 
 const InfoCard = <T extends Record<string, unknown>>({
   title,
@@ -84,7 +81,7 @@ const InfoCard = <T extends Record<string, unknown>>({
                   </div>
                 ) : isISODate(value) ? (
                   <p className="text-gray-600 text-base">
-                    {formatDateOrTime(value as string)}
+                    {formatDateOrTimeFix(value as string)}
                   </p>
                 ) : (
                   <p className="text-gray-600 text-base">

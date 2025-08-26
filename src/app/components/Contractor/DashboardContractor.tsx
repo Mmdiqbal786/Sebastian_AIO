@@ -2,17 +2,17 @@
 
 import DashboardList from "@/app/components/DashboardList";
 import { mongoose } from "@/app/lib/prisma";
-import { IEmployee } from "@/app/types/Employee";
+import { IContractor } from "@/app/types/Contractor";
 
-interface DashboardEmployeesProps {
-  data: IEmployee[];
+interface DashboardContractorsProps {
+  data: IContractor[];
   onClickEdit: (_id: mongoose.Types.ObjectId) => void;
   onClickEditPassword?: (_id: mongoose.Types.ObjectId) => void;
   onClickDelete: (_id: mongoose.Types.ObjectId) => void;
   onClickShow?: (_id: mongoose.Types.ObjectId) => void;
 }
 
-const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
+const DashboardContractors: React.FC<DashboardContractorsProps> = ({
   data,
   onClickEdit,
   onClickEditPassword,
@@ -20,13 +20,13 @@ const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
   onClickShow,
 }) => {
   return (
-    <DashboardList<IEmployee>
+    <DashboardList<IContractor>
       data={data}
-      entity="employees"
+      entity="contractors"
       columns={[
         { key: "name", label: "Name", sortable: true },
         { key: "email", label: "Email", sortable: true },
-        { key: "employeeId", label: "Employee ID" },
+        { key: "contractorId", label: "Contractor ID" },
         { key: "phone", label: "Phone" },
         { key: "address", label: "Address" },
         { key: "document", label: "Image" },
@@ -41,4 +41,4 @@ const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
   );
 };
 
-export default DashboardEmployees;
+export default DashboardContractors;

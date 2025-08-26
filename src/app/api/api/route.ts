@@ -7,6 +7,8 @@ import { ObjectId } from "mongodb";
 import { 
   convertFieldsToNumber,
   findOrCreateRole, 
+  generateAssociateId, 
+  generateContractorId, 
   generateEmployeeId,
   getUserIdByEmail,
   processFoodSelections,
@@ -57,19 +59,10 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
     subEntities?: Record<string, { fields: string[]; process: (data: any, existingData: any) => Promise<any> }>;
   }> = {
     employees: {
-      fields: ["name", "email", "password", "profileImg", "document", "phone", "dob", "address", "type"],
+      fields: ["name", "email", "document", "phone", "dob", "address", "userId", "statusId", "isActive"],
       process: async (data, existingData) => {
         if (method === "PUT" && existingData) {
-          data.password = await processPassword(data.password, existingData.password);
           data.dob = processDate(data.dob, existingData.dob);
-          data.profileImg = await handleFileUpdate({
-            newFile: data.profileImg,
-            existingFile: existingData.profileImg,
-            fieldName: "profileImg",
-            email: data.email,
-            saveFile: saveBase64File,
-            deleteFile,
-          });
           data.document = await handleFileUpdate({
             newFile: data.document,
             existingFile: existingData.document,
@@ -80,26 +73,61 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
           });
         } else {
           await connectToMongoose();
-          const role = await findOrCreateRole(data.role || "employee");
           data.dob = formatDateWithTimezone(data.dob);
-          data.profileImg = await saveBase64File(data.profileImg, "profileImg", data.email);
           data.document = await saveBase64File(data.document, "document", data.email);
           data.employeeId = await generateEmployeeId();
-          data.password = await hashPassword(data.password);
-          data.roleId = role._id;
           data.createdAt = timestamp;
         }
         data.updatedAt = timestamp;
         return data;
       },
-      subEntities: {
-        password: {
-          fields: ["password"],
-          process: async (data, existingData) => ({
-            password: await processPassword(data.password, existingData.password),
-            updatedAt: timestamp,
-          }),
-        },
+    },
+    contractors: {
+      fields: ["name", "email", "document", "phone", "dob", "address", "userId", "statusId", "isActive"],
+      process: async (data, existingData) => {
+        if (method === "PUT" && existingData) {
+          data.dob = processDate(data.dob, existingData.dob);
+          data.document = await handleFileUpdate({
+            newFile: data.document,
+            existingFile: existingData.document,
+            fieldName: "document",
+            email: data.email,
+            saveFile: saveBase64File,
+            deleteFile,
+          });
+        } else {
+          await connectToMongoose();
+          data.dob = formatDateWithTimezone(data.dob);
+          data.document = await saveBase64File(data.document, "document", data.email);
+          data.contractorId = await generateContractorId();
+          data.createdAt = timestamp;
+        }
+        data.updatedAt = timestamp;
+        return data;
+      },
+    },
+    associates: {
+      fields: ["name", "email", "document", "phone", "dob", "address", "userId", "statusId", "isActive"],
+      process: async (data, existingData) => {
+        if (method === "PUT" && existingData) {
+          data.dob = processDate(data.dob, existingData.dob);
+          data.document = await handleFileUpdate({
+            newFile: data.document,
+            existingFile: existingData.document,
+            fieldName: "document",
+            email: data.email,
+            saveFile: saveBase64File,
+            deleteFile,
+          });
+        } else {
+          await connectToMongoose();
+          data.dob = formatDateWithTimezone(data.dob);
+          data.document = await saveBase64File(data.document, "document", data.email);
+          data.associateId = await generateAssociateId();
+          data.createdAt = timestamp;
+        }
+        data.updatedAt = timestamp;
+        return data;
       },
     },
     roles: {
@@ -165,6 +193,14 @@ const getEntityConfig = (entityType: EntityType, method: "POST" | "PUT") => {
         data.updatedAt = timestamp;
         return data;
       },
+    },
+    payrolls: {
+      fields: ["name", "projectId", "location", "month", "owner", "payer", "invoiceOrPayslip", "payment", "statusId", "isActive"],
+      process: async (data, existingData) => ({
+        ...data,
+        updatedAt: timestamp,
+        ...(method === "POST" ? { createdAt: timestamp } : {}),
+      }),
     },
     foods: {
       fields: ["name", "categoryId", "image"],

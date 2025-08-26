@@ -18,7 +18,7 @@ export default function ProjectPage() {
         additionalDataConfig={[
           {
             apiEndpoint: "statuses",
-            label: "User status",
+            label: "Project status",
             fieldName: "statusId",
             tableFieldName: "name"
           },

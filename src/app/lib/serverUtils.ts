@@ -5,6 +5,8 @@ import UserType from "@/app/types/UserType";
 import Employee from "@/app/types/Employee";
 // import User from "@/app/types/User";
 import Plan from "@/app/types/Plan";
+import Associate from "@/app/types/Associate";
+import Contractor from "@/app/types/Contractor";
 
 /**
  * Find or create a user role in the database.
@@ -68,12 +70,41 @@ export const generateEmployeeId = async (): Promise<string> => {
   return newEmployeeId;
 };
 
-// export const generateEmployeeId = async (): Promise<string> => {
+/**
+ * Generate a unique associate ID based on the last user in the database.
+ */
+export const generateAssociateId = async (): Promise<string> => {
+  const lastUser = await Associate.findOne({}, { associateId: 1 }).sort({ associateId: -1 });
+  let newAssociateId = "ASS000001";
+  if (lastUser?.associateId) {
+    const lastNumber = parseInt(lastUser.associateId.replace("ASS", ""), 10);
+    newAssociateId = `ASS${String(lastNumber + 1).padStart(6, "0")}`;
+  }
+  return newAssociateId;
+};
+
+/**
+ * Generate a unique contractor ID based on the last user in the database.
+ */
+export const generateContractorId = async (): Promise<string> => {
+  const lastUser = await Contractor.findOne({}, { contractorId: 1 }).sort({ contractorId: -1 });
+  let newContractorId = "CON000001";
+  if (lastUser?.contractorId) {
+    const lastNumber = parseInt(lastUser.contractorId.replace("CON", ""), 10);
+    newContractorId = `CON${String(lastNumber + 1).padStart(6, "0")}`;
+  }
+  return newContractorId;
+};
+
+/**
+ * Generate a unique user ID based on the last user in the database.
+ */
+// export const generateUserId = async (): Promise<string> => {
 //   const lastUser = await User.findOne({}, { userId: 1 }).sort({ userId: -1 });
-//   let newUserId = "ACE000001";
+//   let newUserId = "USE000001";
 //   if (lastUser?.userId) {
-//     const lastNumber = parseInt(lastUser.userId.replace("ACE", ""), 10);
-//     newUserId = `ACE${String(lastNumber + 1).padStart(6, "0")}`;
+//     const lastNumber = parseInt(lastUser.userId.replace("USE", ""), 10);
+//     newUserId = `USE${String(lastNumber + 1).padStart(6, "0")}`;
 //   }
 //   return newUserId;
 // };

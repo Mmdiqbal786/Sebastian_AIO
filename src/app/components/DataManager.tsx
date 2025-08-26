@@ -241,7 +241,7 @@ export default function DataManager<T>({
           onClickEdit={onClickEdit}
           onClickDelete={onClickDelete}
           onClickShow={onClickShow}
-          {...(entityType === "employees" && { onClickEditPassword })}
+          {...(entityType === "users" && { onClickEditPassword })}
         />
       </main>
     </Layout>

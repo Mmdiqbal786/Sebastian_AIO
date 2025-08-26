@@ -106,6 +106,8 @@ export const paths: AppPath[] = [
 // List of paths allowed for user role
 export const userAllowedPaths = [
   "Dashboard",
+  "Associate",
+  "AssociateInfo",
   "Employee",
   "Contractor",
   "Project",
@@ -132,6 +134,16 @@ export const userAllowedPaths = [
 // List of paths allowed for guest role
 export const guestAllowedPaths = [
   "Dashboard",
+  "Associate",
+  "AssociateInfo",
+  "Employee",
+  "EmployeeInfo",
+  "Contractor",
+  "ContractorInfo",
+  "Payroll",
+  "PayrollInfo",
+  "Invoice",
+  "InvoiceInfo",
   "Notification",
   "Leave",
   "NotificationInfo",

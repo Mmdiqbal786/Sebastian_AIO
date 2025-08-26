@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 
 export const passwordSupportedEntities = ["employees", "users"];
 
-export const entityTypes = ["users", "employees", "roles", "foods", "categories", "foodCategories", "userTypes", "plans", "slots", "paths", "rolePermissions", "userPermissions", "statuses", "projects", "expenses"] as const;
+export const entityTypes = ["users", "employees", "roles", "foods", "categories", "foodCategories", "userTypes", "plans", "slots", "paths", "rolePermissions", "userPermissions", "statuses", "projects", "expenses", "contractors", "associates", "payrolls"] as const;
 
 export type EntityType = typeof entityTypes[number];
 
@@ -15,6 +15,8 @@ export const entityMapping: Record<string, string> = {
   users: "user",
   roles: "role",
   employees: "employee",
+  contractors: "contractor",
+  associates: "associate",
   foods: "food",
   categories: "category",
   foodCategories: "foodCategories",
@@ -26,6 +28,7 @@ export const entityMapping: Record<string, string> = {
   userPermissions: "userPermissions",
   statuses: "status",
   projects: "projects",
+  payrolls: "payroll",
   expenses: "expense"
 };
 
