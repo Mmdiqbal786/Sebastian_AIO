@@ -1,9 +1,9 @@
 import mongoose, { Schema, Document, Model } from "mongoose";
 
-export interface IEmployee extends Document {
+export interface IContractor extends Document {
   [key: string]: unknown;
   _id: mongoose.Types.ObjectId;
-  employeeId: string;
+  contractorId: string;
   name: string;
   email: string;
   phone: string;
@@ -15,9 +15,9 @@ export interface IEmployee extends Document {
   isActive?: boolean;
 }
 
-export const EmployeeSchema = new Schema<IEmployee>(
+export const ContractorSchema = new Schema<IContractor>(
   {
-    employeeId: { type: String, required: true, unique: true },
+    contractorId: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: true },
@@ -28,8 +28,8 @@ export const EmployeeSchema = new Schema<IEmployee>(
     statusId: { type: Schema.Types.ObjectId, ref: "Status", required: true },
     isActive: { type: Boolean, default: true },
   },
-  { timestamps: true, collection: "employees"  }
+  { timestamps: true, collection: "contractors"  }
 );
 
-const Employee: Model<IEmployee> = mongoose.models?.Employee || mongoose.model<IEmployee>("Employee", EmployeeSchema);
-export default Employee;
+const Contractor: Model<IContractor> = mongoose.models?.Contractor || mongoose.model<IContractor>("Contractor", ContractorSchema);
+export default Contractor;

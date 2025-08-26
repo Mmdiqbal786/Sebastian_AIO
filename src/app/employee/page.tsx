@@ -4,8 +4,11 @@ import DataManager from "@/app/components/DataManager";
 import AddEmployee from "@/app/components/Employee/AddEmployee";
 import DashboardEmployee from "@/app/components/Employee/DashboardEmployee";
 import { IEmployee } from "@/app/types/Employee";
+import { useFetchData } from "../lib/fetchHelper";
 
 export default function UsersPage() {
+  const { formattedData: formattedUsers } = useFetchData<{ _id: string; name: string }>("users");
+  const { formattedData: formattedStatuses } = useFetchData<{ _id: string; name: string }>("statuses");
   return (
     <DataManager<IEmployee>
       entityType="employees"
@@ -21,21 +24,31 @@ export default function UsersPage() {
           type: "phone",
           required: true
         },
-        { name: "dob", label: "Date of Birth", type: "datetime-local" },
+        { name: "dob", label: "Date of Birth", type: "date" },
         { name: "address", label: "Address", type: "textarea", required: true },
-        { name: "profileImg", label: "Profile Pic", type: "file" },
         { name: "document", label: "Document", type: "file"},
-        { name: "type", 
+        {
+          name: "userId",
           type: "select",
-          label: "Type",
+          label: "User",
+          required: true,
+          options: formattedUsers.length ? formattedUsers : [{ label: 'No Users available', value: '' }]
+        },
+        {
+          name: "statusId",
+          type: "select",
+          label: "Employee Status",
+          required: true,
+          options: formattedStatuses.length ? formattedStatuses : [{ label: 'No Employee Status available', value: '' }]
+        },
+        { 
+          name: "isActive",
+          type: "select",
+          label: "Active",
           required: true, 
           options: [
-            { label: "Admin", value: "admin" },
-            { label: "Delivery", value: "delivery" },
-            { label: "IT", value: "it" },
-            { label: "TL", value: "tl" },
-            { label: "Manager", value: "manager" },
-            { label: "Picker", value: "picker" }
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" },
           ] 
         },
       ]}

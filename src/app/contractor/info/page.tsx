@@ -1,17 +1,17 @@
 import DetailsPage from "@/app/components/DetailsPage";
-import { IEmployee } from "@/app/types/Employee";
+import { IContractor } from "@/app/types/Contractor";
 import InfoLayout from "@/app/components/Dashboard/InfoLayout";
 
-export default function EmployeePage() {
+export default function ContractorPage() {
   return (
     <InfoLayout>
-      <DetailsPage<IEmployee>
-        apiType="employees"
-        title="Employee Info"
+      <DetailsPage<IContractor>
+        apiType="contractors"
+        title="Contractor Info"
         fieldLabels={{ 
           name: "Name", 
           email: "Email", 
-          employeeId: "Employee Id",
+          contractorId: "Contractor Id",
           phone: "Phone",
           dob: "Date of Birth",
           address: "Address",
@@ -21,7 +21,7 @@ export default function EmployeePage() {
         additionalDataConfig={[
           {
             apiEndpoint: "statuses",
-            label: "Employee status",
+            label: "Contractor status",
             fieldName: "statusId",
             tableFieldName: "name"
           },

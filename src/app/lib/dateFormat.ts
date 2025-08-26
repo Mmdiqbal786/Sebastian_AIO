@@ -56,6 +56,39 @@ export function formatDateOrTime(dateString: string): string {
   });
 }
 
+export function formatDateOrTimeFix(dateString: string): string {
+  const date = new Date(dateString);
+  if (isNaN(date.getTime())) {
+    return dateString;
+  } // invalid date safeguard
+
+  // Check if midnight UTC
+  const isMidnightUTC =
+    date.getUTCHours() === 0 &&
+    date.getUTCMinutes() === 0 &&
+    date.getUTCSeconds() === 0 &&
+    date.getUTCMilliseconds() === 0;
+
+  if (isMidnightUTC) {
+    // Only date
+    return date.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  }
+
+  // Date + time
+  return date.toLocaleString(undefined, {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true, // ensures AM/PM format
+  });
+}
+
 export default formatDate;
 
 /**

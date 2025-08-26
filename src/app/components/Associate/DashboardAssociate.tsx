@@ -2,17 +2,17 @@
 
 import DashboardList from "@/app/components/DashboardList";
 import { mongoose } from "@/app/lib/prisma";
-import { IEmployee } from "@/app/types/Employee";
+import { IAssociate } from "@/app/types/Associate";
 
-interface DashboardEmployeesProps {
-  data: IEmployee[];
+interface DashboardAssociatesProps {
+  data: IAssociate[];
   onClickEdit: (_id: mongoose.Types.ObjectId) => void;
   onClickEditPassword?: (_id: mongoose.Types.ObjectId) => void;
   onClickDelete: (_id: mongoose.Types.ObjectId) => void;
   onClickShow?: (_id: mongoose.Types.ObjectId) => void;
 }
 
-const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
+const DashboardAssociates: React.FC<DashboardAssociatesProps> = ({
   data,
   onClickEdit,
   onClickEditPassword,
@@ -20,13 +20,13 @@ const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
   onClickShow,
 }) => {
   return (
-    <DashboardList<IEmployee>
+    <DashboardList<IAssociate>
       data={data}
-      entity="employees"
+      entity="associates"
       columns={[
         { key: "name", label: "Name", sortable: true },
         { key: "email", label: "Email", sortable: true },
-        { key: "employeeId", label: "Employee ID" },
+        { key: "associateId", label: "Associate ID" },
         { key: "phone", label: "Phone" },
         { key: "address", label: "Address" },
         { key: "document", label: "Image" },
@@ -41,4 +41,4 @@ const DashboardEmployees: React.FC<DashboardEmployeesProps> = ({
   );
 };
 
-export default DashboardEmployees;
+export default DashboardAssociates;

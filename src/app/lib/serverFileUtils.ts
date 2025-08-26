@@ -58,7 +58,9 @@ export const handleFileUpdate = async ({
   deleteFile,
 }: FileUpdateParams): Promise<string | undefined> => {
   if (newFile && newFile.startsWith("data:")) {
-    if (existingFile) await deleteFile(existingFile);
+    if (existingFile) {
+      await deleteFile(existingFile);
+    }
     return await saveFile(newFile, fieldName, email);
   }
   return existingFile;

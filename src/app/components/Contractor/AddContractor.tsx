@@ -5,7 +5,7 @@ import AddEntity from "@/app/components/AddEntity";
 import { useFetchData } from "@/app/lib/fetchHelper";
 import { FormField } from "@/app/lib/form/ReactForm/types";
 
-const AddEmployees = ({ onSuccess }: { onSuccess: (employees: any) => void }) => {
+const AddContractors = ({ onSuccess }: { onSuccess: (contractors: any) => void }) => {
   const { formattedData: formattedUsers } = useFetchData<{ _id: string; name: string }>("users");
   const { formattedData: formattedStatuses } = useFetchData<{ _id: string; name: string }>("statuses");
   const formFields: FormField[] = [
@@ -32,24 +32,24 @@ const AddEmployees = ({ onSuccess }: { onSuccess: (employees: any) => void }) =>
     {
       name: "statusId",
       type: "select",
-      label: "Employee Status",
-      placeholder: "Select Employee Status",
+      label: "Contractor Status",
+      placeholder: "Select Contractor Status",
       required: true,
-      options: formattedStatuses.length ? formattedStatuses : [{ label: 'No Employee Status available', value: '' }]
+      options: formattedStatuses.length ? formattedStatuses : [{ label: 'No Contractor Status available', value: '' }]
     },
     { name: "isActive", type: "hidden", required: false, value: true  },
   ];
 
   return (
     <AddEntity
-      entityType="employees"
+      entityType="contractors"
       apiEndpoint="/api/api"
-      title="Add Employee"
-      buttonText="Add Employee"
+      title="Add Contractor"
+      buttonText="Add Contractor"
       formFields={formFields}
       onSuccess={onSuccess}
     />
   );
 };
 
-export default AddEmployees;
+export default AddContractors;
