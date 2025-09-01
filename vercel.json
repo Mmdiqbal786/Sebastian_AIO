@@ -1,0 +1,12 @@
+{
+  "functions": {
+    "api/**/*.ts": {
+      "runtime": "nodejs20.x",
+      "region": "bom1"
+    },
+    "api/**/*.js": {
+      "runtime": "nodejs20.x",
+      "region": "bom1"
+    }
+  }
+}
